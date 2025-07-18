@@ -9,8 +9,32 @@
 <body>
   <div class="container">
     <h1>Penalty Kicker Game</h1>
-    <p>A simple penalty kicker game built with HTML, CSS, and JavaScript.</p>
-    <div id="app"></div>
+    <div id="scoreboard">
+      <p>Score: <span id="score">0</span></p>
+      <p>Attempts: <span id="attempts">0</span></p>
+    </div>
+    <div id="game-area">
+      <div id="goal">
+        <div id="goalkeeper"></div>
+        <div class="target" id="top-left"></div>
+        <div class="target" id="top-right"></div>
+        <div class="target" id="bottom-left"></div>
+        <div class="target" id="bottom-right"></div>
+        <div class="target" id="center"></div>
+        <div id="ball"></div>
+      </div>
+    </div>
+    <div id="controls">
+      <button id="kick-button">Kick the Ball!</button>
+      <div id="direction-buttons">
+        <button id="top-left-btn">Top Left</button>
+        <button id="top-right-btn">Top Right</button>
+        <button id="center-btn">Center</button>
+        <button id="bottom-left-btn">Bottom Left</button>
+        <button id="bottom-right-btn">Bottom Right</button>
+      </div>
+    </div>
+    <div id="message"></div>
   </div>
   <script src="script.js"></script>
 </body>
