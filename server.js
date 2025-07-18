@@ -31,10 +31,11 @@ const server = http.createServer((req, res) => {
     });
   }
   
-  // Handle style.css (updated from styles.css)
+  // Handle style.css
   if (req.url === '/style.css') {
     return fs.readFile('style.css', (err, data) => {
       if (err) {
+        console.error('Error reading style.css:', err);
         res.writeHead(404);
         res.end('File not found');
         return;
