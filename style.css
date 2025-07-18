@@ -40,106 +40,156 @@ h1 {
   font-weight: bold;
 }
 
-#game-area {
-  position: relative;
+#game-container {
   margin: 20px auto;
-  width: 600px;
-  height: 400px;
+  width: 100%;
+  max-width: 600px;
+}
+
+#goal-area {
+  position: relative;
+  width: 100%;
+  height: 300px;
+  background-color: #78c278; /* Field color */
   border: 3px solid #333;
   border-radius: 5px;
   overflow: hidden;
-  background-color: #f5f5f5;
 }
 
-#gameCanvas {
-  display: block;
-  background-color: #78c278;
-}
-
-#aimer {
+/* Goal posts and crossbar */
+#goal-top, #goal-left, #goal-right {
   position: absolute;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  cursor: crosshair;
+  background-color: white;
+}
+
+#goal-top {
+  top: 20px;
+  left: 50px;
+  width: 500px;
+  height: 10px;
+}
+
+#goal-left {
+  top: 20px;
+  left: 50px;
+  width: 10px;
+  height: 150px;
+}
+
+#goal-right {
+  top: 20px;
+  left: 540px;
+  width: 10px;
+  height: 150px;
+}
+
+/* Goal net (white area inside) */
+#goal-zones {
+  position: absolute;
+  top: 30px;
+  left: 60px;
+  width: 480px;
+  height: 140px;
+  background-color: rgba(245, 245, 245, 0.7);
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
+  grid-template-rows: 1fr 1fr 1fr;
+}
+
+.goal-zone {
+  border: 1px dotted rgba(0, 0, 0, 0.1);
+  background-color: transparent;
+  cursor: pointer;
+  transition: background-color 0.3s;
+}
+
+.goal-zone:hover {
+  background-color: rgba(255, 255, 0, 0.3);
+}
+
+.goal-zone.selected {
+  background-color: rgba(255, 255, 0, 0.5);
+}
+
+#goalkeeper {
+  position: absolute;
+  width: 60px;
+  height: 90px;
+  background-image: url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAyNCAyNCI+PHBhdGggZmlsbD0iI2ZmOTgwMCIgZD0iTTEyLDRBNCw0IDAgMCwxIDE2LDhBNCw0IDAgMCwxIDEyLDEyQTQsNCAwIDAsMSA4LDhBNCw0IDAgMCwxIDEyLDRNMTIsMTRDMTYuNDIsMTQgMjAsMTUuNzkgMjAsMThWMjBIMTYuNVYxOUMxNi41LDE5IDE2LjY3LDE3LjcyIDEyLDE3LjcyVjE0TTE0LjM3LDE0Ljc1QzEzLjAzLDE1LjA5IDEyLjUsMTUuNyAxMi41LDE1LjdDMTIuNSwxNS43IDEyLjgxLDE2IDE0LDE2QzE0LjE0LDE2IDE0LjM3LDE0Ljc1IDE0LjM3LDE0Ljc1TTExLjYzLDE0Ljc1QzExLjYzLDE0Ljc1IDExLjg2LDE2IDE0LjgsMTYuMThDMTMuMTksMTYgMTMuNSwxNS43IDEzLjUsMTUuN0MxMy41LDE1LjcgMTIuOTcsMTUuMDkgMTEuNjMsMTQuNzVNNy43NSwxOUgzLjVWMThDMy41LDE1Ljc5IDcuMDgsMTQgMTEuNSwxNFYxNy43MkMxMC44MywxNy43MiA3Ljc1LDE5IDcuNzUsMTlaIiAvPjwvc3ZnPg==');
+  background-repeat: no-repeat;
+  background-size: contain;
+  top: 80px;
+  left: 50%;
+  transform: translateX(-50%);
+  transition: all 0.5s ease-out;
   z-index: 10;
 }
 
-#aimer-dot {
+#ball {
   position: absolute;
-  width: 20px;
-  height: 20px;
-  background-color: rgba(255, 0, 0, 0.7);
-  border-radius: 50%;
-  transform: translate(-50%, -50%);
-  pointer-events: none;
+  width: 30px;
+  height: 30px;
+  background-image: url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAyNCAyNCI+PHBhdGggZmlsbD0iI2ZmZmZmZiIgZD0iTTEyLDJBMTAsMTAgMCAwLDAgMiwxMkExMCwxMCAwIDAsMCAxMiwyMkExMCwxMCAwIDAsMCAyMiwxMkExMCwxMCAwIDAsMCAxMiwyTTEyLDRDMTMuOCw0IDE1LjUsNC44IDE2LjgsNkgxNC44QzEzLjksCTYuNCAxMyw2LjcgMTIsNi43QzExLDYuNyAxMC4xLDYuNCA5LjIsNkg3LjJDOC41LDQuOCAxMC4yLDQgMTIsNE0xMiwxNy4wM0MxMS40NSwxNy4wMyAxMSwxNi41OCAxMSwxNkMxMSwxNS40MiAxMS40NSwxNC45OCAxMiwxNC45OEMxMi41NSwxNC45OCAxMywxNS40MiAxMywxNkMxMywxNi41OCAxMi41NSwxNy4wMyAxMiwxNy4wM00xNC44LDExSDE4LjgxQzE4LjkzLDExLjMyIDE5LDExLjY2IDE5LDEyQzE5LDEyLjM0IDE4LjkzLDEyLjY4IDE4LjgxLDEzSDE0LjhDMTQuOSwxMi42OCAxNSwxMi4zNCAxNSwxMkMxNSwxMS42NiAxNC45LDExLjMyIDE0LjgsMTFNNS4xOSwxMUg5LjJDOS4xLDExLjMyIDksMTEuNjYgOSwxMkM5LDEyLjM0IDkuMSwxMi42OCA5LjIsMTNINS4xOUM1LjA3LDEyLjY4IDUsMTIuMzQgNSwxMkM1LDExLjY2IDUuMDcsMTEuMzIgNS4xOSwxMU05LjIsOEgxNC44QzE0LjksNy42NiAxNSw3LjMyIDE1LDdDMTUsNi42OCAxNC45LDYuMzQgMTQuOCw2SDkuMkM5LjEsNi4zNCA5LDYuNjggOSw3QzksNy4zMiA5LjEsNy42NiA5LjIsOE05LjIsMTZDOS4xLDE2LjM0IDksMTYuNjggOSwxN0M5LDE3LjMyIDkuMSwxNy42NiA5LjIsMThIMTQuOEMxNC45LDE3LjY2IDE1LDE3LjMyIDE1LDE3QzE1LDE2LjY4IDE0LjksMTYuMzQgMTQuOCwxNkg5LjJNNy4yLDE4SDkuMkMxMC4xLDE3LjYgMTEsMTcuMyAxMiwxNy4zQzEzLDE3LjMgMTMuOSwxNy42IDE0LjgsMThIMTYuOEMxNS41LDE5LjIgMTMuOCwyMCAxMiwyMEMxMC4yLDIwIDguNSwxOS4yIDcuMiwxOFoiIC8+PC9zdmc+');
+  background-repeat: no-repeat;
+  background-size: contain;
+  bottom: 30px;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 5;
+  transition: all 0.8s cubic-bezier(0.2, 0.8, 0.2, 1);
 }
 
-.hidden {
-  display: none;
+#controls-area {
+  margin-top: 20px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 10px;
 }
 
-#controls {
-  margin: 20px 0;
+#message {
+  font-size: 1.2rem;
+  font-weight: bold;
+  color: #2e7d32;
   text-align: center;
+  min-height: 2em;
 }
 
-button {
-  padding: 10px 20px;
-  background-color: #4CAF50;
-  color: white;
+button#kick-button, button#reset-button {
+  padding: 12px 30px;
+  font-size: 1.2rem;
+  font-weight: bold;
   border: none;
-  border-radius: 4px;
+  border-radius: 5px;
   cursor: pointer;
-  margin: 5px;
-  font-size: 1rem;
-  transition: background-color 0.3s, transform 0.2s;
+  transition: all 0.3s;
 }
 
-button:hover {
-  background-color: #45a049;
+button#kick-button {
+  background-color: #f44336;
+  color: white;
+}
+
+button#kick-button:hover:not(:disabled) {
+  background-color: #d32f2f;
+  transform: translateY(-2px);
+}
+
+button#reset-button {
+  background-color: #2196F3;
+  color: white;
+}
+
+button#reset-button:hover {
+  background-color: #0b7dda;
   transform: translateY(-2px);
 }
 
 button:disabled {
-  background-color: #cccccc;
-  cursor: not-allowed;
-  transform: none;
-}
-
-.primary-button {
-  background-color: #2196F3;
-  font-size: 1.2rem;
-  padding: 12px 24px;
-}
-
-.primary-button:hover {
-  background-color: #0b7dda;
-}
-
-#kick-button {
-  background-color: #f44336;
-}
-
-#kick-button:hover {
-  background-color: #d32f2f;
-}
-
-#instruction {
-  margin-top: 10px;
-  font-style: italic;
+  background-color: #cccccc !important;
   color: #666;
-}
-
-#message {
-  margin-top: 20px;
-  padding: 10px;
-  font-size: 1.2rem;
-  font-weight: bold;
-  min-height: 30px;
-  text-align: center;
-  color: #2e7d32;
+  cursor: not-allowed;
+  transform: none !important;
 }
 
 #game-stats {
@@ -155,13 +205,32 @@ button:disabled {
   color: #2e7d32;
 }
 
-/* Animation for goal celebration */
-@keyframes celebrate {
-  0% { transform: scale(1); }
-  50% { transform: scale(1.1); }
-  100% { transform: scale(1); }
+@keyframes kickAnimation {
+  0% { bottom: 30px; left: 50%; }
+  100% { bottom: 170px; }
+}
+
+@keyframes goalkeeperDiveLeft {
+  0% { transform: translateX(-50%) rotate(0deg); }
+  100% { transform: translateX(-130%) rotate(-30deg); }
+}
+
+@keyframes goalkeeperDiveRight {
+  0% { transform: translateX(-50%) rotate(0deg); }
+  100% { transform: translateX(30%) rotate(30deg); }
+}
+
+@keyframes goalkeeperDiveCenter {
+  0% { transform: translateX(-50%) scale(1); }
+  100% { transform: translateX(-50%) scale(1.2); }
 }
 
 .celebrate {
-  animation: celebrate 0.5s ease-in-out;
+  animation: celebrate 0.5s ease-in-out 3;
+}
+
+@keyframes celebrate {
+  0% { transform: scale(1); }
+  50% { transform: scale(1.2); }
+  100% { transform: scale(1); }
 }
