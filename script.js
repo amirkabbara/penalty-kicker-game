@@ -1,3 +1,4 @@
+console.log('script.js is loading...');
 // Main application script
 document.addEventListener('DOMContentLoaded', () => {
   const app = document.getElementById('app');
