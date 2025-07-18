@@ -33,14 +33,31 @@ document.addEventListener('DOMContentLoaded', () => {
   
   // Load images
   const goalkeeperImg = new Image();
-  goalkeeperImg.src = 'data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAyNCAyNCI+PHBhdGggZmlsbD0iI2ZmOTgwMCIgZD0iTTEyLDRBNCw0IDAgMCwxIDE2LDhBNCw0IDAgMCwxIDEyLDEyQTQsNCAwIDAsMSA4LDhBNCw0IDAgMCwxIDEyLDRNMTIsMTRDMTYuNDIsMTQgMjAsMTUuNzkgMjAsMThWMjBIMTYuNVYxOUMxNi41LDE5IDEyLjY3LDE3LjcyIDEyLDE3LjcyVjE0TTE0LjM3LDE0Ljc1QzEzLjAzLDE1LjA5IDEyLjUsMTUuNyAxMi41LDE1LjdDMTIuNSwxNS43IDEyLjgxLDE2IDE0LDYuMThDMTQuMTQsMTYuMTggMTQuMzcsMTQuNzUgMTQuMzcsMTQuNzVNMTEuNjMsMTQuNzVDMTEuNjMsMTQuNzUgMTEuODYsMTYuMTggMTIsMTYuMThDMTMuMTksMTYgMTMuNSwxNS43IDEzLjUsMTUuN0MxMy41LDE1LjcgMTIuOTcsMTUuMDkgMTEuNjMsMTQuNzVNNy43NSwxOUgzLjVWMThDMy41LDE1Ljc5IDcuMDgsMTQgMTEuNSwxNFYxNy43MkMxMC44MywxNy43MiA3Ljc1LDE5IDcuNzUsMTlaIiAvPjwvc3ZnPg==';
+  goalkeeperImg.src = 'data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAyNCAyNCI+PHBhdGggZmlsbD0iI2ZmOTgwMCIgZD0iTTEyLDRBNCw0IDAgMCwxIDE2LDhBNCw0IDAgMCwxIDEyLDEyQTQsNCAwIDAsMSA4LDhBNCw0IDAgMCwxIDEyLDRNMTIsMTRDMTYuNDIsMTQgMjAsMTUuNzkgMjAsMThWMjBIMTYuNVYxOUMxNi41LDE5IDE2LjY3LDE3LjcyIDEyLDE3LjcyVjE0TTE0LjM3LDE0Ljc1QzEzLjAzLDE1LjA5IDEyLjUsMTUuNyAxMi41LDE1LjdDMTIuNSwxNS43IDEyLjgxLDE2IDE0LDE2QzE0LjE0LDE2IDE0LjM3LDE0Ljc1IDE0LjM3LDE0Ljc1TTExLjYzLDE0Ljc1QzExLjYzLDE0Ljc1IDExLjg2LDE2IDE0LjgsMTYuMThDMTMuMTksMTYgMTMuNSwxNS43IDEzLjUsMTUuN0MxMy41LDE1LjcgMTIuOTcsMTUuMDkgMTEuNjMsMTQuNzVNNy43NSwxOUgzLjVWMThDMy41LDE1Ljc5IDcuMDgsMTQgMTEuNSwxNFYxNy43MkMxMC44MywxNy43MiA3Ljc1LDE5IDcuNzUsMTlaIiAvPjwvc3ZnPg==';
   
   const ballImg = new Image();
   ballImg.src = 'data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAyNCAyNCI+PHBhdGggZmlsbD0iI2ZmZmZmZiIgZD0iTTEyLDJBMTAsMTAgMCAwLDAgMiwxMkExMCwxMCAwIDAsMCAxMiwyMkExMCwxMCAwIDAsMCAyMiwxMkExMCwxMCAwIDAsMCAxMiwyTTEyLDRDMTMuOCw0IDE1LjUsNC44IDE2LjgsNkgxNC44QzEzLjksCTYuNCAxMyw2LjcgMTIsNi43QzExLDYuNyAxMC4xLDYuNCCA5LjIsNkg3LjJDOC41LDQuOCAxMC4yLDQgMTIsNE0xMiwxNy4wM0MxMS40NSwxNy4wMyAxMSwxNi41OCAxMSwxNkMxMSwxNS40MiAxMS40NSwxNC45OCAxMiwxNC45OEMxMi41NSwxNC45OCAxMywxNS40MiAxMywxNkMxMywxNi41OCAxMi41NSwxNy4wMyAxMiwxNy4wM00xNC44LDExSDE4LjgxQzE4LjkzLDExLjMyIDE5LDExLjY2IDE5LDEyQzE5LDEyLjM0IDE4LjkzLDEyLjY4IDE4LjgxLDEzSDE0LjhDMTQuOSwxMi42OCAxNSwxMi4zNCAxNSwxMkMxNSwxMS42NiAxNC45LDExLjMyIDE0LjgsMTFNNS4xOSwxMUg5LjJDOS4xLDExLjMyIDksMTEuNjYgOSwxMkM5LDEyLjM0IDkuMSwxMi42OCA5LjIsMTNINS4xOUM1LjA3LDEyLjY4IDUsMTIuMzQgNSwxMkM1LDExLjY2IDUuMDcsMTEuMzIgNS4xOSwxMU05LjIsOEgxNC44QzE0LjksNy42NiAxNSw3LjMyIDE1LDdDMTUsNi42OCAxNC45LDYuMzQgMTQuOCw2SDkuMkM5LjEsNi4zNCA5LDYuNjggOSw3QzksNy4zMiA5LjEsNy42NiA5LjIsOE05LjIsMTZDOS4xLDE2LjM0IDksMTYuNjggOSwxN0M5LDE3LjMyIDkuMSwxNy42NiA5LjIsMThIMTQuOEMxNC45LDE3LjY2IDE1LDE3LjMyIDE1LDE3QzE1LDE2LjY4IDE0LjksMTYuMzQgMTQuOCwxNkg5LjJNNy4yLDE4SDkuMkMxMC4xLDE3LjYgMTEsMTcuMyAxMiwxNy4zQzEzLDE3LjMgMTMuOSwxNy42IDE0LjgsMThIMTYuOEMxNS41LDE5LjIgMTMuOCwyMCAxMiwyMEMxMC4yLDIwIDguNSwxOS4yIDcuMiwxOFoiIC8+PC9zdmc+';
   
   // Initialize game
   function init() {
-    drawGameScene();
+    // Make sure images are loaded
+    let imagesLoaded = 0;
+    const totalImages = 2;
+    
+    function onImageLoad() {
+      imagesLoaded++;
+      if (imagesLoaded === totalImages) {
+        // All images loaded, now draw game
+        drawGameScene();
+      }
+    }
+    
+    goalkeeperImg.onload = onImageLoad;
+    ballImg.onload = onImageLoad;
+    
+    // If images are cached and already loaded
+    if (goalkeeperImg.complete) onImageLoad();
+    if (ballImg.complete) onImageLoad();
     
     // Event listeners
     aimButton.addEventListener('click', startAiming);
@@ -111,7 +128,7 @@ document.addEventListener('DOMContentLoaded', () => {
   }
   
   // Draw the goalkeeper
-  function drawGoalkeeper(x = canvas.width / 2, diving = null) {
+  function drawGoalkeeper(x, diving = null) {
     const goalX = (canvas.width - GOAL_WIDTH) / 2;
     const goalY = 50;
     const goalkeeperY = goalY + GOAL_HEIGHT - GOALKEEPER_HEIGHT;
@@ -174,6 +191,13 @@ document.addEventListener('DOMContentLoaded', () => {
     aimButton.disabled = true;
     instruction.textContent = "Click anywhere on the goal to aim";
     messageElement.textContent = "Aim your shot carefully!";
+    
+    // Show aimer dot initially at center of goal
+    const goalX = (canvas.width - GOAL_WIDTH) / 2;
+    const goalY = 50;
+    aimerDot.style.left = (goalX + GOAL_WIDTH/2) + 'px';
+    aimerDot.style.top = (goalY + GOAL_HEIGHT/2) + 'px';
+    aimerDot.style.display = 'block';
   }
   
   // Update aimer position based on mouse movement
@@ -228,7 +252,23 @@ document.addEventListener('DOMContentLoaded', () => {
   
   // Kick the ball to the target
   function kickBall() {
-    if (isAnimating || !targetX || !targetY) return;
+    console.log("Kick function called");
+    
+    if (isAnimating) {
+      console.log("Already animating, ignoring kick");
+      return;
+    }
+    
+    if (!targetX || !targetY) {
+      console.log("No target set, setting default");
+      // If no target set, use center of goal
+      const goalX = (canvas.width - GOAL_WIDTH) / 2;
+      const goalY = 50;
+      targetX = goalX + GOAL_WIDTH / 2;
+      targetY = goalY + GOAL_HEIGHT / 2;
+    }
+    
+    console.log(`Starting kick animation to target (${targetX}, ${targetY})`);
     
     isAnimating = true;
     attempts++;
@@ -314,11 +354,15 @@ document.addEventListener('DOMContentLoaded', () => {
       }
     }
     
-    animate();
+    // Start the animation
+    console.log("Starting animation");
+    requestAnimationFrame(animate);
   }
   
   // Check if goal is scored
   function checkGoal(goalkeeperX, diveDirection) {
+    console.log("Checking goal");
+    
     // Determine if goalkeeper saved the shot
     const goalX = (canvas.width - GOAL_WIDTH) / 2;
     const goalY = 50;
@@ -338,19 +382,20 @@ document.addEventListener('DOMContentLoaded', () => {
       scoreElement.textContent = score;
       messageElement.textContent = "GOAL! 🎉 Great shot!";
       messageElement.classList.add('celebrate');
-      setTimeout(() => messageElement.classList.remove('celebrate'), 500);
+      setTimeout(() => messageElement.classList.remove('celebrate'), 1000);
     } else {
       // Save by goalkeeper
       messageElement.textContent = "Saved by the goalkeeper! 🧤 Try again!";
     }
     
     // Update stats
-    const accuracy = Math.round((score / attempts) * 100);
-    const saveRate = Math.round(((attempts - score) / attempts) * 100);
+    const accuracy = Math.round((score / attempts) * 100) || 0;
+    const saveRate = Math.round(((attempts - score) / attempts) * 100) || 0;
     accuracyElement.textContent = accuracy;
     saveRateElement.textContent = saveRate;
     
     // Reset for next shot
+    console.log("Resetting for next shot");
     setTimeout(() => {
       isAnimating = false;
       aimButton.disabled = false;
@@ -359,9 +404,11 @@ document.addEventListener('DOMContentLoaded', () => {
       targetY = 0;
       instruction.textContent = "Click 'Aim Shot' to take another penalty";
       drawGameScene();
+      console.log("Reset complete");
     }, 2000);
   }
   
   // Initialize the game
+  console.log("Initializing game");
   init();
 });
