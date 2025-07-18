@@ -40,6 +40,44 @@ h1 {
   font-weight: bold;
 }
 
+/* Difficulty selector styles */
+#difficulty-selector {
+  margin: 15px 0;
+  text-align: center;
+}
+
+#difficulty-selector p {
+  font-weight: bold;
+  margin-bottom: 8px;
+  font-size: 1.1rem;
+}
+
+.difficulty-buttons {
+  display: flex;
+  justify-content: center;
+  gap: 10px;
+}
+
+.difficulty-btn {
+  padding: 8px 16px;
+  border: 2px solid #2e7d32;
+  background-color: white;
+  color: #2e7d32;
+  border-radius: 20px;
+  font-weight: bold;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.difficulty-btn:hover {
+  background-color: #e8f5e9;
+}
+
+.difficulty-btn.active {
+  background-color: #2e7d32;
+  color: white;
+}
+
 #game-container {
   margin: 20px auto;
   width: 100%;
