@@ -63,8 +63,8 @@ document.addEventListener('DOMContentLoaded', () => {
     resetButton.disabled = true;
     goalZones.forEach(zone => zone.style.pointerEvents = 'none');
     
-    // Determine goalkeeper action
-    const goalkeeperAction = determineGoalkeeperAction(selectedZone);
+    // Determine goalkeeper action - COMPLETELY INDEPENDENT of player's shot
+    const goalkeeperAction = determineGoalkeeperAction();
     
     // Get target position based on selected zone
     const targetPosition = getTargetPosition(selectedZone);
@@ -99,27 +99,17 @@ document.addEventListener('DOMContentLoaded', () => {
     });
   }
   
-  // Determine goalkeeper action based on selected zone
-  function determineGoalkeeperAction(zone) {
-    // Create columns and rows from zone
-    const [row, column] = zone.split('-');
-    
-    // 70% chance goalkeeper goes in the right direction
-    // 30% chance goalkeeper goes in wrong direction
+  // Determine goalkeeper action RANDOMLY - not based on selected zone
+  function determineGoalkeeperAction() {
+    // Completely random goalkeeper action
     const randomValue = Math.random();
     
-    if (randomValue < 0.7) {
-      // Goalkeeper makes the right decision
-      if (column === 'left') return 'dive-left';
-      if (column === 'right') return 'dive-right';
-      return 'dive-center';
+    if (randomValue < 0.33) {
+      return 'dive-left';
+    } else if (randomValue < 0.67) {
+      return 'dive-right';
     } else {
-      // Goalkeeper makes the wrong decision
-      if (column === 'left') return 'dive-right';
-      if (column === 'right') return 'dive-left';
-      
-      // If shot is center, randomly dive left or right
-      return Math.random() < 0.5 ? 'dive-left' : 'dive-right';
+      return 'dive-center';
     }
   }
   
@@ -188,12 +178,12 @@ document.addEventListener('DOMContentLoaded', () => {
         (column === 'right' && goalkeeperAction === 'dive-right') ||
         (column === 'center' && goalkeeperAction === 'dive-center')) {
       
-      // 20% chance to score even if goalkeeper dives correctly (for more fun)
-      return Math.random() < 0.2;
+      // 40% chance to score even if goalkeeper dives correctly (for more fun)
+      return Math.random() < 0.4;
     }
     
-    // If goalkeeper dives in the wrong direction, 90% chance to score
-    return Math.random() < 0.9;
+    // If goalkeeper dives in the wrong direction, 95% chance to score
+    return Math.random() < 0.95;
   }
   
   // Update game statistics
