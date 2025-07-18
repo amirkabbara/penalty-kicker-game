@@ -31,9 +31,9 @@ const server = http.createServer((req, res) => {
     });
   }
   
-  // Handle styles.css 
-  if (req.url === '/styles.css') {
-    return fs.readFile('styles.css', (err, data) => {
+  // Handle style.css (updated from styles.css)
+  if (req.url === '/style.css') {
+    return fs.readFile('style.css', (err, data) => {
       if (err) {
         res.writeHead(404);
         res.end('File not found');
