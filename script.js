@@ -33,6 +33,19 @@ document.addEventListener('DOMContentLoaded', () => {
     'hard': 0.7      // 70% chance goalkeeper goes to the right zone
   };
   
+  // Zone to position mapping (for precise targeting)
+  const zonePositions = {
+    'top-left': { left: '25%', bottom: '150px' },
+    'top-center': { left: '50%', bottom: '150px' },
+    'top-right': { left: '75%', bottom: '150px' },
+    'middle-left': { left: '25%', bottom: '100px' },
+    'middle-center': { left: '50%', bottom: '100px' },
+    'middle-right': { left: '75%', bottom: '100px' },
+    'bottom-left': { left: '25%', bottom: '50px' },
+    'bottom-center': { left: '50%', bottom: '50px' },
+    'bottom-right': { left: '75%', bottom: '50px' }
+  };
+  
   // Initialize game
   function initGame() {
     // Add event listeners to goal zones
@@ -103,7 +116,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const goalkeeperAction = determineGoalkeeperAction(selectedZone);
     
     // Get target position based on selected zone
-    const targetPosition = getTargetPosition(selectedZone);
+    const targetPosition = zonePositions[selectedZone];
     
     // Animate goalkeeper
     animateGoalkeeper(goalkeeperAction);
@@ -164,25 +177,6 @@ document.addEventListener('DOMContentLoaded', () => {
     }
   }
   
-  // Get ball target position based on selected zone
-  function getTargetPosition(zone) {
-    // Calculate position based on zone
-    const [row, column] = zone.split('-');
-    
-    // More precise positioning
-    let leftPosition;
-    if (column === 'left') leftPosition = '25%';
-    else if (column === 'center') leftPosition = '50%';
-    else leftPosition = '75%';
-    
-    let bottomPosition;
-    if (row === 'top') bottomPosition = '150px';
-    else if (row === 'middle') bottomPosition = '100px';
-    else bottomPosition = '50px';
-    
-    return { left: leftPosition, bottom: bottomPosition };
-  }
-  
   // Animate goalkeeper based on action
   function animateGoalkeeper(action) {
     goalkeeper.style.animation = 'none';
@@ -211,12 +205,26 @@ document.addEventListener('DOMContentLoaded', () => {
     // Trigger reflow
     void ball.offsetWidth;
     
-    // Set target position
-    ball.style.bottom = position.bottom;
-    ball.style.left = position.left;
-    
-    // Add animation
+    // Set target position and animation
     ball.style.transition = 'all 0.8s cubic-bezier(0.2, 0.8, 0.2, 1)';
+    
+    // Small random variation to make it more natural (±5%)
+    const randomX = Math.random() * 10 - 5; // -5% to +5%
+    const randomY = Math.random() * 10 - 5; // -5% to +5%
+    
+    // Parse position values and apply small random variation
+    const leftValue = parseInt(position.left);
+    const bottomValue = parseInt(position.bottom);
+    
+    // Apply the position with variation
+    if (leftValue === 50) {
+      // Center shots should stay more centered
+      ball.style.left = `${leftValue + (randomX / 2)}%`;
+    } else {
+      ball.style.left = `${leftValue + randomX}%`;
+    }
+    
+    ball.style.bottom = `${bottomValue + randomY}px`;
     
     // Call callback after animation completes
     setTimeout(callback, 800);
