@@ -14,20 +14,34 @@
       <p>Attempts: <span id="attempts">0</span></p>
     </div>
     
-    <div id="game-area">
-      <canvas id="gameCanvas" width="600" height="400"></canvas>
-      <div id="aimer" class="hidden">
-        <div id="aimer-dot"></div>
+    <div id="game-container">
+      <div id="goal-area">
+        <div id="goal-top"></div>
+        <div id="goal-left"></div>
+        <div id="goal-right"></div>
+        
+        <div id="goal-zones">
+          <button class="goal-zone" data-zone="top-left"></button>
+          <button class="goal-zone" data-zone="top-center"></button>
+          <button class="goal-zone" data-zone="top-right"></button>
+          <button class="goal-zone" data-zone="middle-left"></button>
+          <button class="goal-zone" data-zone="middle-center"></button>
+          <button class="goal-zone" data-zone="middle-right"></button>
+          <button class="goal-zone" data-zone="bottom-left"></button>
+          <button class="goal-zone" data-zone="bottom-center"></button>
+          <button class="goal-zone" data-zone="bottom-right"></button>
+        </div>
+        
+        <div id="goalkeeper"></div>
+        <div id="ball"></div>
+      </div>
+      
+      <div id="controls-area">
+        <div id="message">Select where to aim your shot!</div>
+        <button id="kick-button" disabled>KICK!</button>
+        <button id="reset-button">RESET</button>
       </div>
     </div>
-    
-    <div id="controls">
-      <button id="aim-button" class="primary-button">Aim Shot</button>
-      <button id="kick-button" class="primary-button" disabled>Kick!</button>
-      <p id="instruction">Click "Aim Shot" to start aiming</p>
-    </div>
-    
-    <div id="message"></div>
     
     <div id="game-stats">
       <h3>Game Statistics</h3>
