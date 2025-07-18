@@ -10,31 +10,30 @@
   <div class="container">
     <h1>Penalty Kicker Game</h1>
     <div id="scoreboard">
-      <p>Score: <span id="score">0</span></p>
+      <p>Goals: <span id="score">0</span></p>
       <p>Attempts: <span id="attempts">0</span></p>
     </div>
+    
     <div id="game-area">
-      <div id="goal">
-        <div id="goalkeeper"></div>
-        <div class="target" id="top-left"></div>
-        <div class="target" id="top-right"></div>
-        <div class="target" id="bottom-left"></div>
-        <div class="target" id="bottom-right"></div>
-        <div class="target" id="center"></div>
-        <div id="ball"></div>
+      <canvas id="gameCanvas" width="600" height="400"></canvas>
+      <div id="aimer" class="hidden">
+        <div id="aimer-dot"></div>
       </div>
     </div>
+    
     <div id="controls">
-      <button id="kick-button">Kick the Ball!</button>
-      <div id="direction-buttons">
-        <button id="top-left-btn">Top Left</button>
-        <button id="top-right-btn">Top Right</button>
-        <button id="center-btn">Center</button>
-        <button id="bottom-left-btn">Bottom Left</button>
-        <button id="bottom-right-btn">Bottom Right</button>
-      </div>
+      <button id="aim-button" class="primary-button">Aim Shot</button>
+      <button id="kick-button" class="primary-button" disabled>Kick!</button>
+      <p id="instruction">Click "Aim Shot" to start aiming</p>
     </div>
+    
     <div id="message"></div>
+    
+    <div id="game-stats">
+      <h3>Game Statistics</h3>
+      <p>Shot Accuracy: <span id="accuracy">0</span>%</p>
+      <p>Save Rate: <span id="save-rate">0</span>%</p>
+    </div>
   </div>
   <script src="script.js"></script>
 </body>
