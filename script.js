@@ -10,12 +10,28 @@ document.addEventListener('DOMContentLoaded', () => {
   const saveRateElement = document.getElementById('save-rate');
   const goalkeeper = document.getElementById('goalkeeper');
   const ball = document.getElementById('ball');
+  const difficultyButtons = document.querySelectorAll('.difficulty-btn');
   
   // Game state
   let score = 0;
   let attempts = 0;
   let selectedZone = null;
   let isAnimating = false;
+  let currentDifficulty = 'easy'; // Default difficulty
+  
+  // Difficulty settings (goalkeeper save chance when diving correctly)
+  const difficultySaveChances = {
+    'easy': 0.3,     // 30% chance to save when diving in the correct zone
+    'medium': 0.6,   // 60% chance to save when diving in the correct zone
+    'hard': 0.85     // 85% chance to save when diving in the correct zone
+  };
+  
+  // Difficulty settings (goalkeeper correct direction chance)
+  const difficultyCorrectDirectionChances = {
+    'easy': 0.3,     // 30% chance goalkeeper goes to the right zone
+    'medium': 0.5,   // 50% chance goalkeeper goes to the right zone
+    'hard': 0.7      // 70% chance goalkeeper goes to the right zone
+  };
   
   // Initialize game
   function initGame() {
@@ -28,8 +44,28 @@ document.addEventListener('DOMContentLoaded', () => {
     kickButton.addEventListener('click', kickBall);
     resetButton.addEventListener('click', resetGame);
     
+    // Add event listeners to difficulty buttons
+    difficultyButtons.forEach(button => {
+      button.addEventListener('click', () => setDifficulty(button.dataset.difficulty));
+    });
+    
     // Set initial message
     message.textContent = "Select a zone to aim your shot!";
+  }
+  
+  // Set game difficulty
+  function setDifficulty(difficulty) {
+    currentDifficulty = difficulty;
+    
+    // Update UI
+    difficultyButtons.forEach(button => {
+      button.classList.remove('active');
+      if (button.dataset.difficulty === difficulty) {
+        button.classList.add('active');
+      }
+    });
+    
+    message.textContent = `Difficulty set to ${difficulty.toUpperCase()}. Select a zone to aim your shot!`;
   }
   
   // Handle zone selection
@@ -63,8 +99,8 @@ document.addEventListener('DOMContentLoaded', () => {
     resetButton.disabled = true;
     goalZones.forEach(zone => zone.style.pointerEvents = 'none');
     
-    // Determine goalkeeper action - COMPLETELY INDEPENDENT of player's shot
-    const goalkeeperAction = determineGoalkeeperAction();
+    // Determine goalkeeper action based on difficulty
+    const goalkeeperAction = determineGoalkeeperAction(selectedZone);
     
     // Get target position based on selected zone
     const targetPosition = getTargetPosition(selectedZone);
@@ -99,17 +135,32 @@ document.addEventListener('DOMContentLoaded', () => {
     });
   }
   
-  // Determine goalkeeper action RANDOMLY - not based on selected zone
-  function determineGoalkeeperAction() {
-    // Completely random goalkeeper action
-    const randomValue = Math.random();
+  // Determine goalkeeper action based on selected zone and difficulty
+  function determineGoalkeeperAction(zone) {
+    // Extract direction from zone
+    const [row, column] = zone.split('-');
     
-    if (randomValue < 0.33) {
-      return 'dive-left';
-    } else if (randomValue < 0.67) {
-      return 'dive-right';
-    } else {
+    // Get chance of goalkeeper going in the right direction based on difficulty
+    const correctDirectionChance = difficultyCorrectDirectionChances[currentDifficulty];
+    
+    // Decide if goalkeeper makes the right decision based on difficulty
+    if (Math.random() < correctDirectionChance) {
+      // Goalkeeper makes the right decision
+      if (column === 'left') return 'dive-left';
+      if (column === 'right') return 'dive-right';
       return 'dive-center';
+    } else {
+      // Goalkeeper makes the wrong decision
+      // Generate a random direction that's not the correct one
+      const directions = ['left', 'center', 'right'];
+      const correctDirection = column;
+      const incorrectDirections = directions.filter(dir => dir !== correctDirection);
+      
+      // Randomly select from incorrect directions
+      const randomIndex = Math.floor(Math.random() * incorrectDirections.length);
+      const randomDirection = incorrectDirections[randomIndex];
+      
+      return `dive-${randomDirection}`;
     }
   }
   
@@ -118,15 +169,16 @@ document.addEventListener('DOMContentLoaded', () => {
     // Calculate position based on zone
     const [row, column] = zone.split('-');
     
+    // More precise positioning
     let leftPosition;
     if (column === 'left') leftPosition = '25%';
     else if (column === 'center') leftPosition = '50%';
     else leftPosition = '75%';
     
     let bottomPosition;
-    if (row === 'top') bottomPosition = '170px';
-    else if (row === 'middle') bottomPosition = '120px';
-    else bottomPosition = '70px';
+    if (row === 'top') bottomPosition = '150px';
+    else if (row === 'middle') bottomPosition = '100px';
+    else bottomPosition = '50px';
     
     return { left: leftPosition, bottom: bottomPosition };
   }
@@ -152,6 +204,7 @@ document.addEventListener('DOMContentLoaded', () => {
   function animateBall(position, callback) {
     // Reset ball position first
     ball.style.animation = 'none';
+    ball.style.transition = 'none';
     ball.style.bottom = '30px';
     ball.style.left = '50%';
     
@@ -172,18 +225,17 @@ document.addEventListener('DOMContentLoaded', () => {
   // Check if goal is scored
   function checkGoal(selectedZone, goalkeeperAction) {
     const [row, column] = selectedZone.split('-');
+    const goalkeepDirection = goalkeeperAction.split('-')[1];
     
     // If goalkeeper dives in the right direction
-    if ((column === 'left' && goalkeeperAction === 'dive-left') ||
-        (column === 'right' && goalkeeperAction === 'dive-right') ||
-        (column === 'center' && goalkeeperAction === 'dive-center')) {
-      
-      // 40% chance to score even if goalkeeper dives correctly (for more fun)
-      return Math.random() < 0.4;
+    if (column === goalkeepDirection) {
+      // Chance to save based on difficulty
+      const saveChance = difficultySaveChances[currentDifficulty];
+      return Math.random() > saveChance; // Goal if random is higher than save chance
     }
     
-    // If goalkeeper dives in the wrong direction, 95% chance to score
-    return Math.random() < 0.95;
+    // If goalkeeper dives in the wrong direction, high chance to score
+    return Math.random() < 0.95; // 95% chance to score if goalkeeper dives wrong
   }
   
   // Update game statistics
